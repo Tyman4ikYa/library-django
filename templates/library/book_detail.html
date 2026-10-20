@@ -1,0 +1,33 @@
+{% extends "base.html" %}
+
+{% block title %}{{ book.title }}{% endblock %}
+
+{% block content %}
+<a href="{% url 'library:book_list' %}" class="btn btn-outline-secondary btn-sm mb-3">← Назад к списку</a>
+
+<div class="row">
+    <div class="col-md-8">
+        <h1>{{ book.title }}</h1>
+        <p class="text-muted">
+            Автор: <a href="{% url 'library:author_detail' book.author.pk %}">{{ book.author }}</a>
+        </p>
+        <p><strong>Год:</strong> {{ book.year }}</p>
+        <p><strong>ISBN:</strong> {{ book.isbn|default:"—" }}</p>
+        <p><strong>Страниц:</strong> {{ book.pages }}</p>
+        <p><strong>Цена:</strong> {{ book.price }} ₽</p>
+        <p><strong>Доступна:</strong> {% if book.available %}✅ Да{% else %}❌ Нет{% endif %}</p>
+
+        <h4 class="mt-4">Жанры</h4>
+        {% if book.genres.all %}
+            {% for genre in book.genres.all %}
+                <span class="badge bg-secondary me-1">{{ genre.name }}</span>
+            {% endfor %}
+        {% else %}
+            <p class="text-muted">Жанры не указаны</p>
+        {% endif %}
+
+        <h4 class="mt-4">Описание</h4>
+        <p>{{ book.description|default:"Описание отсутствует"|linebreaks }}</p>
+    </div>
+</div>
+{% endblock %}

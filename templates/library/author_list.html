@@ -1,0 +1,31 @@
+{% extends "base.html" %}
+
+{% block title %}Авторы{% endblock %}
+
+{% block content %}
+<h1 class="mb-4">✍️ Авторы</h1>
+
+{% if authors %}
+    <div class="row">
+        {% for author in authors %}
+            <div class="col-md-4 mb-4">
+                <div class="card h-100">
+                    <div class="card-body">
+                        <h5 class="card-title">
+                            <a href="{% url 'library:author_detail' author.pk %}" class="text-decoration-none">
+                                {{ author }}
+                            </a>
+                        </h5>
+                        {% if author.birth_date %}
+                            <p class="card-text text-muted mb-2">Дата рождения: {{ author.birth_date }}</p>
+                        {% endif %}
+                        <p class="card-text">Книг: {{ author.books_count }}</p>
+                    </div>
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+{% else %}
+    <div class="alert alert-info">Авторов пока нет.</div>
+{% endif %}
+{% endblock %}

@@ -1,0 +1,36 @@
+{% extends "base.html" %}
+
+{% block title %}{{ author }}{% endblock %}
+
+{% block content %}
+<a href="{% url 'library:author_list' %}" class="btn btn-outline-secondary btn-sm mb-3">← Назад к авторам</a>
+
+<h1>{{ author }}</h1>
+
+{% if author.birth_date %}
+    <p><strong>Дата рождения:</strong> {{ author.birth_date }}</p>
+{% endif %}
+
+{% if author.bio %}
+    <p><strong>Биография:</strong> {{ author.bio|linebreaks }}</p>
+{% else %}
+    <p class="text-muted">Биография отсутствует</p>
+{% endif %}
+
+<hr>
+
+<h3 class="mt-4">Книги автора</h3>
+
+{% if books %}
+    <ul class="list-group">
+        {% for book in books %}
+            <li class="list-group-item d-flex justify-content-between align-items-center">
+                <a href="{% url 'library:book_detail' book.slug %}">{{ book.title }}</a>
+                <span class="text-muted">{{ book.year }} · {{ book.price }} ₽</span>
+            </li>
+        {% endfor %}
+    </ul>
+{% else %}
+    <p class="text-muted">У автора пока нет доступных книг.</p>
+{% endif %}
+{% endblock %}
