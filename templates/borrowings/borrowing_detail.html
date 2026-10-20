@@ -1,0 +1,66 @@
+{% extends "base.html" %}
+{% block title %}Выдача №{{ borrowing.pk }}{% endblock %}
+{% block content %}
+<a href="{% url 'borrowings:list' %}" class="btn btn-outline-secondary btn-sm mb-3">← Мои выдачи</a>
+
+<h1>Выдача №{{ borrowing.pk }}</h1>
+
+<div class="row">
+    <div class="col-md-7">
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Книга</th>
+                    <th>Автор</th>
+                    <th class="text-center">Кол-во</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for item in borrowing.items.all %}
+                    <tr>
+                        <td>{{ item.book_title }}</td>
+                        <td>{{ item.book_author }}</td>
+                        <td class="text-center">{{ item.quantity }}</td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+    <div class="col-md-5">
+        <div class="card">
+            <div class="card-header">Информация</div>
+            <ul class="list-group list-group-flush">
+                <li class="list-group-item">
+                    <strong>Статус:</strong> {{ borrowing.get_status_display }}
+                </li>
+                <li class="list-group-item">
+                    <strong>Дата возврата:</strong> {{ borrowing.due_date|date:"d.m.Y" }}
+                </li>
+                {% if borrowing.returned_at %}
+                    <li class="list-group-item">
+                        <strong>Возвращено:</strong> {{ borrowing.returned_at|date:"d.m.Y H:i" }}
+                    </li>
+                {% endif %}
+                <li class="list-group-item">
+                    <strong>Создано:</strong> {{ borrowing.created_at|date:"d.m.Y H:i" }}
+                </li>
+                {% if borrowing.comment %}
+                    <li class="list-group-item">
+                        <strong>Комментарий:</strong> {{ borrowing.comment }}
+                    </li>
+                {% endif %}
+            </ul>
+        </div>
+
+        {% if borrowing.can_be_returned %}
+            <form method="post" action="{% url 'borrowings:return' borrowing.pk %}" class="mt-3">
+                {% csrf_token %}
+                <button type="submit" class="btn btn-warning w-100" onclick="return confirm('Вернуть книги?')">
+                    Вернуть книги
+                </button>
+            </form>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

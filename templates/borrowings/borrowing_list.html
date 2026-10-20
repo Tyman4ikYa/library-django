@@ -1,0 +1,41 @@
+{% extends "base.html" %}
+{% block title %}Мои выдачи{% endblock %}
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h1>Мои выдачи</h1>
+    <a href="{% url 'borrowings:create' %}" class="btn btn-success">+ Оформить выдачу</a>
+</div>
+
+{% if borrowings %}
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>№</th>
+                <th>Дата выдачи</th>
+                <th>Статус</th>
+                <th>Позиций</th>
+                <th>Дата возврата</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for b in borrowings %}
+                <tr>
+                    <td>{{ b.pk }}</td>
+                    <td>{{ b.created_at|date:"d.m.Y H:i" }}</td>
+                    <td><span class="badge bg-info">{{ b.get_status_display }}</span></td>
+                    <td>{{ b.items.count }}</td>
+                    <td>{{ b.due_date|date:"d.m.Y" }}</td>
+                    <td>
+                        <a href="{% url 'borrowings:detail' b.pk %}" class="btn btn-sm btn-outline-primary">Открыть</a>
+                    </td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+{% else %}
+    <div class="alert alert-info">
+        У вас пока нет выдач. <a href="{% url 'borrowings:create' %}">Оформить первую</a>.
+    </div>
+{% endif %}
+{% endblock %}
