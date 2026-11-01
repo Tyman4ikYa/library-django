@@ -1,0 +1,44 @@
+{% extends 'base.html' %}
+
+{% block title %}Мои выдачи{% endblock %}
+
+{% block content %}
+<h1 class="mb-4">Мои выдачи</h1>
+{% if borrowings %}
+    <table class="table table-hover">
+        <thead>
+            <tr>
+                <th>№</th>
+                <th>Дата выдачи</th>
+                <th>Статус</th>
+                <th>Позиций</th>
+                <th>Дата возврата</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for borrowing in borrowings %}
+                <tr>
+                    <td>№{{ borrowing.pk }}</td>
+                    <td>{{ borrowing.created_at|date:"d.m.Y H:i" }}</td>
+                    <td>
+                        <span class="badge {% if borrowing.status == 'active' %}bg-success{% elif borrowing.status == 'overdue' %}bg-danger{% else %}bg-secondary{% endif %}">
+                            {{ borrowing.get_status_display }}
+                        </span>
+                    </td>
+                    <td>{{ borrowing.items.count }}</td>
+                    <td>{{ borrowing.due_date|date:"d.m.Y" }}</td>
+                    <td class="text-end">
+                        <a href="{% url 'borrowings:detail' borrowing.pk %}" class="btn btn-sm btn-outline-primary">Открыть</a>
+                    </td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+{% else %}
+    <div class="alert alert-info">
+        У вас пока нет выдач. 
+        <a href="{% url 'book_list' %}">Перейти в каталог</a>.
+    </div>
+{% endif %}
+{% endblock %}

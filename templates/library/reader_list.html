@@ -1,0 +1,32 @@
+{% extends 'base.html' %}
+
+{% block title %}{{ reader.full_name }}{% endblock %}
+
+{% block content %}
+<div class="mb-3">
+    <a href="{% url 'reader_list' %}" class="btn btn-outline-secondary btn-sm">← Назад к списку</a>
+</div>
+
+<div class="card">
+    <div class="card-body">
+        <div class="d-flex align-items-center mb-3">
+            {% if reader.photo %}
+                <img src="{{ reader.photo.url }}" class="rounded-circle me-3" style="width: 120px; height: 120px; object-fit: cover;" alt="{{ reader.full_name }}">
+            {% else %}
+                <div class="rounded-circle bg-secondary text-white d-flex align-items-center justify-content-center me-3" style="width: 120px; height: 120px; font-size: 40px;">
+                    {{ reader.full_name|first }}
+                </div>
+            {% endif %}
+            <h2 class="card-title mb-0">{{ reader.full_name }}</h2>
+        </div>
+        
+        <ul class="list-group list-group-flush mt-3">
+            <li class="list-group-item"><strong>Email:</strong> {{ reader.email }}</li>
+            <li class="list-group-item"><strong>Телефон:</strong> {{ reader.phone }}</li>
+            <li class="list-group-item"><strong>Адрес:</strong> {{ reader.address }}</li>
+            <li class="list-group-item"><strong>Номер билета:</strong> {{ reader.ticket_number }}</li>
+            <li class="list-group-item"><strong>Дата регистрации:</strong> {{ reader.registration_date }}</li>
+        </ul>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,40 @@
+{% extends 'base.html' %}
+
+{% block title %}{{ book.title }}{% endblock %}
+
+{% block content %}
+<div class="mb-3">
+    <a href="{% url 'book_list' %}" class="btn btn-outline-secondary btn-sm">← Назад к списку книг</a>
+</div>
+
+<div class="row">
+    <div class="col-md-4">
+        {% if book.cover %}
+            <img src="{{ book.cover.url }}" class="img-fluid rounded book-cover-large" alt="{{ book.title }}">
+        {% else %}
+            <div class="bg-secondary text-white d-flex align-items-center justify-content-center rounded book-cover-large" style="height: 300px;">
+                Нет обложки
+            </div>
+        {% endif %}
+    </div>
+    <div class="col-md-8">
+        <div class="card">
+            <div class="card-body">
+                <h2 class="card-title">{{ book.title }}</h2>
+                <h5 class="card-subtitle mb-3 text-muted">Автор: {{ book.author }}</h5>
+                
+                <p><strong>Жанры:</strong> {{ book.genres.all|join:", " }}</p>
+                <ul class="list-group list-group-flush mb-3">
+                    <li class="list-group-item">Год: {{ book.year }}</li>
+                    <li class="list-group-item">ISBN: {{ book.isbn }}</li>
+                    <li class="list-group-item">Страниц: {{ book.pages }}</li>
+                    <li class="list-group-item">Цена: {{ book.price }} ₽</li>
+                </ul>
+                
+                <h5>Описание</h5>
+                <p>{{ book.description }}</p>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
