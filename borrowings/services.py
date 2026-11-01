@@ -1,13 +1,11 @@
 from django.db import transaction
-
 from .models import Borrowing, BorrowingItem
 
-
 @transaction.atomic
-def create_borrowing(reader, books, due_date, comment=""):
+def create_borrowing(reader, books_data, due_date, comment=""):
     """
     Создаёт выдачу.
-    books — список словарей [{"book": Book, "quantity": 1}, ...]
+    books_data — список словарей вида [{"book": Book, "quantity": 1}, ...]
     """
     borrowing = Borrowing.objects.create(
         reader=reader,
@@ -16,13 +14,13 @@ def create_borrowing(reader, books, due_date, comment=""):
         status=Borrowing.STATUS_ACTIVE,
     )
 
-    for item in books:
+    for item in books_data:
         book = item["book"]
         BorrowingItem.objects.create(
             borrowing=borrowing,
             book=book,
             book_title=book.title,
-            book_author=f"{book.author}",
+            book_author=str(book.author),
             quantity=item.get("quantity", 1),
         )
 

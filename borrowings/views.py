@@ -4,30 +4,21 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.views.decorators.http import require_POST
 from django.utils import timezone
 
-from library.models import Book
 from .forms import BorrowingForm
 from .models import Borrowing
 from .services import create_borrowing
 
-
 @login_required
 def borrowing_create_view(request):
-    available_books = Book.objects.filter(available=True).select_related("author")
-
     if request.method == "POST":
         form = BorrowingForm(request.POST)
         if form.is_valid():
-            book_ids = request.POST.getlist("book_ids")
-            if not book_ids:
-                messages.error(request, "Выберите хотя бы одну книгу.")
-                return render(request, "borrowings/borrowing_form.html", {
-                    "form": form, "books": available_books,
-                })
-
-            books = [{"book": get_object_or_404(Book, id=bid), "quantity": 1} for bid in book_ids]
+            # Превращаем выбранные книги в список словарей для сервиса
+            books_data = [{"book": book, "quantity": 1} for book in form.cleaned_data["books"]]
+            
             borrowing = create_borrowing(
                 reader=request.user,
-                books=books,
+                books_data=books_data,
                 due_date=form.cleaned_data["due_date"],
                 comment=form.cleaned_data.get("comment", ""),
             )
@@ -36,10 +27,7 @@ def borrowing_create_view(request):
     else:
         form = BorrowingForm()
 
-    return render(request, "borrowings/borrowing_form.html", {
-        "form": form, "books": available_books,
-    })
-
+    return render(request, "borrowings/borrowing_form.html", {"form": form})
 
 @login_required
 def borrowing_detail_view(request, pk):
@@ -50,12 +38,10 @@ def borrowing_detail_view(request, pk):
     )
     return render(request, "borrowings/borrowing_detail.html", {"borrowing": borrowing})
 
-
 @login_required
 def borrowing_list_view(request):
     borrowings = Borrowing.objects.filter(reader=request.user).prefetch_related("items")
     return render(request, "borrowings/borrowing_list.html", {"borrowings": borrowings})
-
 
 @login_required
 @require_POST

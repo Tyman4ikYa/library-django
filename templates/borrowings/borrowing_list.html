@@ -1,13 +1,11 @@
-{% extends "base.html" %}
-{% block title %}Мои выдачи{% endblock %}
-{% block content %}
-<div class="d-flex justify-content-between align-items-center mb-4">
-    <h1>Мои выдачи</h1>
-    <a href="{% url 'borrowings:create' %}" class="btn btn-success">+ Оформить выдачу</a>
-</div>
+{% extends 'base.html' %}
 
+{% block title %}Мои выдачи{% endblock %}
+
+{% block content %}
+<h1 class="mb-4">Мои выдачи</h1>
 {% if borrowings %}
-    <table class="table table-striped">
+    <table class="table table-hover">
         <thead>
             <tr>
                 <th>№</th>
@@ -19,15 +17,19 @@
             </tr>
         </thead>
         <tbody>
-            {% for b in borrowings %}
+            {% for borrowing in borrowings %}
                 <tr>
-                    <td>{{ b.pk }}</td>
-                    <td>{{ b.created_at|date:"d.m.Y H:i" }}</td>
-                    <td><span class="badge bg-info">{{ b.get_status_display }}</span></td>
-                    <td>{{ b.items.count }}</td>
-                    <td>{{ b.due_date|date:"d.m.Y" }}</td>
+                    <td>№{{ borrowing.pk }}</td>
+                    <td>{{ borrowing.created_at|date:"d.m.Y H:i" }}</td>
                     <td>
-                        <a href="{% url 'borrowings:detail' b.pk %}" class="btn btn-sm btn-outline-primary">Открыть</a>
+                        <span class="badge {% if borrowing.status == 'active' %}bg-success{% elif borrowing.status == 'overdue' %}bg-danger{% else %}bg-secondary{% endif %}">
+                            {{ borrowing.get_status_display }}
+                        </span>
+                    </td>
+                    <td>{{ borrowing.items.count }}</td>
+                    <td>{{ borrowing.due_date|date:"d.m.Y" }}</td>
+                    <td class="text-end">
+                        <a href="{% url 'borrowings:detail' borrowing.pk %}" class="btn btn-sm btn-outline-primary">Открыть</a>
                     </td>
                 </tr>
             {% endfor %}
@@ -35,7 +37,8 @@
     </table>
 {% else %}
     <div class="alert alert-info">
-        У вас пока нет выдач. <a href="{% url 'borrowings:create' %}">Оформить первую</a>.
+        У вас пока нет выдач. 
+        <a href="{% url 'library:book_list' %}">Перейти в каталог</a>.
     </div>
 {% endif %}
 {% endblock %}
