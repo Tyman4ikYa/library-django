@@ -4,6 +4,8 @@ class Author(models.Model):
     first_name = models.CharField(max_length=100, verbose_name="Имя")
     last_name = models.CharField(max_length=100, verbose_name="Фамилия")
     birth_date = models.DateField(blank=True, null=True, verbose_name="Дата рождения")
+    # Добавили фото автора
+    photo = models.ImageField(upload_to='authors/', blank=True, null=True, verbose_name="Фото")
 
     class Meta:
         verbose_name = "Автор"
@@ -32,13 +34,14 @@ class Book(models.Model):
     year = models.IntegerField(verbose_name="Год")
     price = models.DecimalField(max_digits=10, decimal_places=2, verbose_name="Цена")
     available = models.BooleanField(default=True, verbose_name="Доступна")
-    created_at = models.DateTimeField(auto_now_add=True, verbose_name="Дата добавления")
-    updated_at = models.DateTimeField(auto_now=True, verbose_name="Дата обновления")
-    
-    # Добавляем недостающие поля для шаблона
     description = models.TextField(blank=True, null=True, verbose_name="Описание")
     isbn = models.CharField(max_length=13, blank=True, null=True, verbose_name="ISBN")
     pages = models.IntegerField(default=0, verbose_name="Количество страниц")
+    # Добавили обложку
+    cover = models.ImageField(upload_to='covers/', blank=True, null=True, verbose_name="Обложка")
+    
+    created_at = models.DateTimeField(auto_now_add=True, verbose_name="Дата добавления")
+    updated_at = models.DateTimeField(auto_now=True, verbose_name="Дата обновления")
 
     class Meta:
         verbose_name = "Книга"
@@ -54,6 +57,8 @@ class Reader(models.Model):
     address = models.CharField(max_length=255, blank=True, null=True, verbose_name="Адрес")
     ticket_number = models.CharField(max_length=50, unique=True, verbose_name="Номер билета")
     registration_date = models.DateField(auto_now_add=True, verbose_name="Дата регистрации")
+    # Добавили фото читателя
+    photo = models.ImageField(upload_to='readers/', blank=True, null=True, verbose_name="Фото")
 
     class Meta:
         verbose_name = "Читатель"
