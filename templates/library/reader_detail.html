@@ -1,0 +1,23 @@
+{% extends 'base.html' %}
+
+{% block title %}{{ reader.full_name }}{% endblock %}
+
+{% block content %}
+<div class="mb-3">
+    <a href="{% url 'library:reader_list' %}" class="btn btn-outline-secondary btn-sm">← Назад к списку</a>
+</div>
+
+<div class="card">
+    <div class="card-body">
+        <h2 class="card-title">{{ reader.full_name }}</h2>
+        
+        <ul class="list-group list-group-flush mt-3">
+            <li class="list-group-item"><strong>Email:</strong> {{ reader.email }}</li>
+            <li class="list-group-item"><strong>Телефон:</strong> {{ reader.phone }}</li>
+            <li class="list-group-item"><strong>Адрес:</strong> {{ reader.address }}</li>
+            <li class="list-group-item"><strong>Номер билета:</strong> {{ reader.ticket_number }}</li>
+            <li class="list-group-item"><strong>Дата регистрации:</strong> {{ reader.registration_date }}</li>
+        </ul>
+    </div>
+</div>
+{% endblock %}
